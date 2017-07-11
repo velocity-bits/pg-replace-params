@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Replace parameters in SQL</title>
+    <!-- Open Sans Font -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+    <style>
+      #app {
+        margin: 2.5vh 10vw;
+      }
+      .label {
+        font-weight: bold;
+        margin: 5px 0;
+      }
+      #input {
+        display: block;
+        width: 80vw;
+        height: 20vh;
+      }
+      #params {
+        display: block;
+        width: 80vw;
+        height: 20vh;
+      }
+      #output {
+        width: 80vw;
+        height: 20vh;
+      }
+      #btnRun {
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>If you're seeing this message, that means <strong>JavaScript has been disabled on your browser</strong>, please <strong>enable JS</strong> to make this app work.</noscript>
+    <script>
+      function run() {
+        var inputElem = document.getElementById('input');
+        var paramsElem = document.getElementById('params');
+        var outputElem = document.getElementById('output');
+
+        var inputStr = inputElem.value;
+        var paramsStr = paramsElem.value;
+
+        function parse_param(s) {
+          a = s.trim().split("=")
+          return {key: a[0], value: a[1]};
+        }
+
+        function sort_params(list) {
+          list.sort(function(a, b) {
+            return b.value.length - a.value.length;
+          });
+          return list;
+        }
+
+        // TODO specify parameter prefix
+        // TODO flag to quote value or not
+        outputElem.textContent = sort_params(paramsStr.split(",").map(parse_param)).reduce(function (result, p) {
+          return result.replace(":" + p.key, "'" + p.value + "'");
+        }, inputStr.trim());
+      }
+    </script>
+    <div id="app">
+      <div class="label">Input:</div>
+      <textarea id="input">
+      </textarea>
+      <div class="label">Parameters:</div>
+      <textarea id="params">
+      </textarea>
+      <button id="btnRun" onclick="run()">RUN</button>
+      <div class="label">Output:</div>
+      <pre id="output">
+      </pre>
+    </div>
+  </body>
+</html>
